@@ -31,13 +31,13 @@ Each row has the following columns:
 For **RAW_interactions** dataframe, it has 731927 rows × 5 columns. This is having much more rows because there could be multiple ratings and reviews for a single recipe.
 Each row has the following columns:
 
-**Column**|**Description**
----|---
-*'user_id'*|User ID
-*'recipe_id'*|Recipe ID
-*'date'*|Date of interaction
-*'rating'*|Rating given
-*'review'*|Review text
+| **Column**|**Description** |
+| --- | --- |
+| *'user_id'* | User ID |
+| *'recipe_id'* | Recipe ID |
+| *'date'* | Date of interaction |
+| *'rating'* | Rating given |
+| *'review'* | Review text |
 
 
 We decide to merge those two dataframes based on *recipe_id* and get the overall dataframe **recipes**. Here is what it looks like:
