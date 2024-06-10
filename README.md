@@ -13,6 +13,7 @@ There are two csv files in our data set:
 
 For **RAW_recipes** dataframe, it has 83782 rows × 12 columns.
 Each row has the following columns:
+
 **Column**|**Description**
 ---|---
 *'name'*|Recipe name
@@ -29,6 +30,7 @@ Each row has the following columns:
 
 For **RAW_interactions** dataframe, it has 731927 rows × 5 columns. This is having much more rows because there could be multiple ratings and reviews for a single recipe.
 Each row has the following columns:
+
 **Column**|**Description**
 ---|---
 *'user_id'*|User ID
