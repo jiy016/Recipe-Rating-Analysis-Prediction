@@ -26,7 +26,7 @@ This is our **Centered Question: which variable impact the average rating of a r
 
 >Head of the cleaned dataframe
 <iframe
-  src="assets/Carbohydrates_vs_rating.html"
+  src="assets/carbohydrates_vs_rating.html"
   width="800"
   height="600"
   frameborder="0"
