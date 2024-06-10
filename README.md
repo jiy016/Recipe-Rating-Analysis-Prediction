@@ -1,7 +1,7 @@
 # Recipe-Rating-Analysis-Prediction
 
 
-### 1. Introduction
+### Introduction
 
 In this project, we plan to analyze a dataset of recipes.
 
@@ -54,12 +54,12 @@ We decide to merge those two dataframes based on *recipe_id* and get the overall
 
 This is our **Centered Question: which variable impact the average rating of a recipe?**
 
-> num of rows, name of cols, why relevant
+> why relevant
 
 
 
 
-### 2. Data Cleaning and Exploratory Data Analysis
+### Data Cleaning and Exploratory Data Analysis
 
 >Head of the cleaned dataframe
 <iframe
@@ -72,12 +72,12 @@ This is our **Centered Question: which variable impact the average rating of a r
 
 
 This is another line
-### 3. Assessment of Missingness
-### 4. Hypothesis Testing
-### 5. Framing a Prediction Problem
-### 6. Baseline Model
-### 7. Final Model
-### 8. Fairness Analysis
+### Assessment of Missingness
+### Hypothesis Testing
+### Framing a Prediction Problem
+### Baseline Model
+### Final Model
+### Fairness Analysis
 
 In the fairness test part, we want to see if our model have a fair performance through [], so we use **Group X as [earlier recipes]** and **Group Y as [later recipes]**. 
 On our defination, the boundary between earlier and later would be [] since it is the mean of two middle quartiles representing the average division for most recipes.
