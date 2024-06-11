@@ -139,14 +139,12 @@ This **recipe** data frame is easier to process. We will use this dataframe to d
   width="800"
   height="600"
   frameborder="0"
-  style="margin-bottom: 2px;"
 ></iframe>
 <iframe
   src="assets/bivariate_steps_rating.html"
   width="800"
   height="600"
   frameborder="0"
-  style="margin-bottom: 20px;"
 ></iframe>
 <iframe
   src="assets/bivariate_by_season.html"
@@ -213,6 +211,7 @@ Based on the permutation test, we **reject the null hypothesis** for most of col
   height="600"
   frameborder="0"
 ></iframe>
+
 <iframe
   src="assets/perm_minutes.html"
   width="800"
