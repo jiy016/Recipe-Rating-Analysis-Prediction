@@ -91,7 +91,7 @@ After adding the following columns:
 | *'protein  '* | The amount of protein |
 | *'saturated fat '* | The amount of saturated fat |
 | *'carbohydrates  '* | The amount of carbohydrates |
-| *'season  '* | The season of the submition time |
+| *'season  '* | The season of the submittion time |
 
 
 This is the dataframe after the data cleaning:
@@ -139,12 +139,14 @@ This **recipe** data frame is easier to process. We will use this dataframe to d
   width="800"
   height="600"
   frameborder="0"
+  style="margin-bottom: 20px;"
 ></iframe>
 <iframe
   src="assets/bivariate_steps_rating.html"
   width="800"
   height="600"
   frameborder="0"
+  style="margin-bottom: 20px;"
 ></iframe>
 <iframe
   src="assets/bivariate_by_season.html"
@@ -206,12 +208,10 @@ Running a permutation test to see how significant their value differs from the a
 
 Based on the permutation test, we **reject the null hypothesis** for most of columns, since having a p-value less than 0.05 means that under the null hypothesis, the probability of this situation happens due to chance is less than 5%.
 <iframe
-  src="assets/perm_suar.html"
+  src="assets/perm_sugar.html"
   width="800"
   height="600"
   frameborder="0"
-></iframe>
-<iframe
   src="assets/perm_minutes.html"
   width="800"
   height="600"
@@ -224,6 +224,7 @@ But there are also columns related to the missing so much. For example, column *
   width="800"
   height="600"
   frameborder="0"
+  style="margin-bottom: 20px;"
 ></iframe>
 <iframe
   src="assets/perm_protein.html"
