@@ -62,6 +62,8 @@ We will do the data cleaning and organizing in the next step.
 
 First, we decide to merge those two dataframes based on *recipe_id* and get an combined dataframe. This is what it looks like:
 
+
+<div style="text-align: center;">
 |    | name                              |     id |   minutes |   contributor_id | submitted   | tags                              | nutrition                                    |   n_steps | steps                             | description                       | ingredients                       |   n_ingredients |          user_id |   recipe_id | date       |   rating | review                            |
 |---:|:----------------------------------|-------:|----------:|-----------------:|:------------|:----------------------------------|:---------------------------------------------|----------:|:----------------------------------|:----------------------------------|:----------------------------------|----------------:|-----------------:|------------:|:-----------|---------:|:----------------------------------|
 |  0 | 1 brownies in the world    bes... | 333281 |        40 |           985201 | 2008-10-27  | ['60-minutes-or-less', 'time-t... | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]     |        10 | ['heat the oven to 350f and ar... | these are the most; chocolatey... | ['bittersweet chocolate', 'uns... |               9 | 386585           |      333281 | 2008-11-19 |        4 | These were pretty good, but to... |
@@ -69,7 +71,7 @@ First, we decide to merge those two dataframes based on *recipe_id* and get an c
 |  2 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 |  29782           |      306168 | 2008-12-31 |        5 | This was one of the best brocc... |
 |  3 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 |      1.19628e+06 |      306168 | 2009-04-13 |        5 | I made this for my son's first... |
 |  4 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 | 768828           |      306168 | 2013-08-02 |        5 | Loved this.  Be sure to comple... |
-
+</div>
 
 - According to the rubric of the project, adding a new column (*rating*) of average ratings that all 0 ratings are replaced with NaN.
 - Adding two columns, one contains the number of reviews for each recipe (*num_reviews*), and the other one contains the every reviews for each recipe (*reviews*). 
@@ -125,7 +127,7 @@ This **recipe** data frame is easier to process. We will use this dataframe to d
 ></iframe>
 
 
-#### Univariate Analysis
+#### Bivariate Analysis
 
 > Bivariate graphs, need explaination
 <iframe
@@ -174,7 +176,7 @@ In the next step, we will analyze the missing values in our dataset.
 
 There are three columns in our dataset have missing values, which are *name*, *description*, and *average_ratings*.
 
-| **Column**|**Number of Missing** |
+| **Column**|**Number of Missing Values** |
 | --- | --- |
 | *'name'* | 1 |
 | *'description'* | 70 |
@@ -190,7 +192,7 @@ Running a permutation test to see how significant their value differs from the a
 - **Test Statistics**: Absolute differences in means.
 - **Significance Level**: 0.05
 
-
+After doing the permutation test, this is what we get:
 | **Column** | **p-value** | **Relation** |
 | --- | --- | --- |
 | *'minutes'* | 0.042 | √ |
@@ -204,20 +206,21 @@ Running a permutation test to see how significant their value differs from the a
 | *'saturated fat'* | 0.00 | √ |
 | *'carbohydrates'* | 0.00 | √ |
 
-Based on the permutation test, we **reject the null hypothesis** for most of columns, since having a p-value less than 0.05 means that under the null hypothesis, the probability of this situation happens due to chance is less than 5%.
+Based on the permutation test results, we **reject the null hypothesis** for most of columns, since having a p-value less than 0.05 means that under the null hypothesis, the probability of this situation happens due to chance is less than 5%.
 <iframe
   src="assets/perm_sugar.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-
+p-value for sugar: 0.00, reject
 <iframe
   src="assets/perm_minutes.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
+p-value for mintues: 0.042, reject
 
 But there are also columns related to the missing so much. For example, column *sodium* has a high p-value of **0.896**, and *protein* column has a p-value of **0.16**, which suggests that we **fail to reject** the null hypothesis of those two columns.
 <iframe
@@ -227,19 +230,21 @@ But there are also columns related to the missing so much. For example, column *
   frameborder="0"
   style="margin-bottom: 20px;"
 ></iframe>
+p-value for sodium: 0.87, fail to reject
 <iframe
   src="assets/perm_protein.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
+p-value for protein: 0.16, fail to reject
 
-**Related columns**: *minutes*,*num_reviews*,*n_steps*,*n_ingredients*,*total fat*,*sugar*,*saturated fat*, *carbohydrates*.
+**Related columns**: *minutes*, *num_reviews*, *n_steps*, *n_ingredients*, *total fat*, *sugar*, *saturated fat*, *carbohydrates*.
 
-**Conclusion**: The **related columns** is related to the missing values of *average_ratings*. Or we can say, the missingness of *average_ratings* is **Missing At Random (MAR)** that related with values of related columns.
+**Conclusion**: The **related columns** are related to the missing values of *average_ratings*. Or we can say, the missingness of *average_ratings* is **Missing At Random (MAR)** that related with values of related columns.
 
 
-**Imputation**: After the analysis, we did probabilitic permutation based on *num_reviews*. That means the missing value of *average_ratings* will be filled with the value that has the similar *num_reviews*.
+**Imputation**: After the analysis, we did probabilitic permutation based on *num_reviews*. That means the missing value of *average_ratings* will be filled with the value that has the similar *num_reviews*.  
 After the imputation, the mean of *average_ratings* changed from 4.625 to 4.624.
 
 ### Hypothesis Testing
