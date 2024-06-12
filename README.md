@@ -55,20 +55,18 @@ First, we decide to merge those two dataframes based on *recipe_id* and get an c
 
 |    | name                              |     id |   minutes |   contributor_id | submitted   | tags                              | nutrition                                    |   n_steps | steps                             | description                       | ingredients                       |   n_ingredients |          user_id |   recipe_id | date       |   rating | review                            |
 |---:|:----------------------------------|-------:|----------:|-----------------:|:------------|:----------------------------------|:---------------------------------------------|----------:|:----------------------------------|:----------------------------------|:----------------------------------|----------------:|-----------------:|------------:|:-----------|---------:|:----------------------------------|
-|  0 | 1 brownies in the world    bes... | 333281 |        40 |           985201 | 2008-10-27  | ['60-minutes-or-less', 'time-t... | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]     |        10 | ['heat the oven to 350f and ar... | these are the most; chocolatey... | ['bittersweet chocolate', 'uns... |               9 | 386585           |      333281 | 2008-11-19 |        4 | These were pretty good, but to... |
+|  0 | 1 brownies in the world best... | 333281 |        40 |           985201 | 2008-10-27  | ['60-minutes-or-less', 'time-t... | [138.4, 10.0, 50.0, 3.0, 3.0, 19.0, 6.0]     |        10 | ['heat the oven to 350f and ar... | these are the most; chocolatey... | ['bittersweet chocolate', 'uns... |               9 | 386585           |      333281 | 2008-11-19 |        4 | These were pretty good, but to... |
 |  1 | 1 in canada chocolate chip coo... | 453467 |        45 |          1848091 | 2011-04-11  | ['60-minutes-or-less', 'time-t... | [595.1, 46.0, 211.0, 22.0, 13.0, 51.0, 26.0] |        12 | ['pre-heat oven the 350 degree... | this is the recipe that we use... | ['white sugar', 'brown sugar',... |              11 | 424680           |      453467 | 2012-01-26 |        5 | Originally I was gonna cut the... |
 |  2 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 |  29782           |      306168 | 2008-12-31 |        5 | This was one of the best brocc... |
 |  3 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 |      1.19628e+06 |      306168 | 2009-04-13 |        5 | I made this for my son's first... |
 |  4 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 | 768828           |      306168 | 2013-08-02 |        5 | Loved this.  Be sure to comple... |
-
 
 - We replaced all "0" ratings with np.NaN to not skew the average ratings to lower. 
 - We added two columns, one contains the number of reviews for each recipe (*num_reviews*), and the other one contains the every review for each recipe (*reviews*). 
 - We split the *nutrition* column into 7 columns, each containing the amount of corresponding nutrition, then dropped the original *nutrition* column.
 - We calculated the *average rating* for each recipe.
 - We added the *season* column by the *sumbitted* time, indicating the season the recipe was posted. 
-  - Spring: 3-5. Summer: 6-8. Fall: 7-9. Winter: 12-2.
-
+  - Spring: 3-5. Summer: 6-8. Fall: 7-9. Winter: 12-2 (month).
 
 After adding the following columns:
 
@@ -99,14 +97,11 @@ This is the dataframe after the data cleaning. It contains a row for each recipe
 
 83782 rows × 22 columns
 
-This **recipes** data frame is easier to process. We will use this dataframe to do the further works.
+This **recipes** dataframe is easier to process. We will use this dataframe to do the further works.
 
 #### Univariate Analysis
 
 We first explored the distribution of ratings.
-
-
->Head of the cleaned dataframe
 <iframe
   src="assets/univariate.html"
   width="800"
@@ -278,7 +273,7 @@ Number of reviews for a given recipe (quantitative),
 
 The amount of sodium in recipe (quantitative)
 
-Our model has RMSE of __, and $R^2$ value of ____.   
+Our model has RMSE of 0.65, and $R^2$ value of 0.0028.  
 
 Our current model is not good. The very low $R^2$ means that the model cannot explain the variance of the dataset; it appears to be underfit and we should add more features. Additionally, the low value for the coefficients indicate the need for other features and for feature engineering. 
 
@@ -313,7 +308,7 @@ Standard Scalar: with_mean or with_std = False or True. This would again render 
 
 Our final model improved it's performance, performing well on the training and test data.
 
-Lower RMSE of ___ and higher R^2 of __: Addition of useful features.
+Lower RMSE of 0.6102 and higher R^2 of 0.1177: Addition of useful features.
 
 The coefficients are higher magnitude. Specifically, the Sentiment feature shows a strong positive correlation, which makes sense (more "positive" reviews should correspond to generally higher ratings).
 
@@ -337,4 +332,4 @@ plt.ylabel('Frequency')
 plt.legend()
 plt.show()
 
-With p______, we reject our null hypothesis that our model is fair.
+With p = 0.001, we reject our null hypothesis that our model is fair.
