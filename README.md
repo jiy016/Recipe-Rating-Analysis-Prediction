@@ -1,7 +1,7 @@
-# [GitHub Repository Here](https://github.com/jiy016/Recipe-Rating-Analysis-Prediction/tree/main)
+# Recipe Rating Analysis and Prediction
 
 # Overview
-This project is part of DSC80 course at UCSD, which is investigating the influence of different factors on the average rating of recipes.
+We love food and cooking. However, as college students, we are both very busy and are tired of making a recipe we found online and not enjoying the meal. With this in mind, we want to know if there are certain types of recipes and components of their reviews that could lead us in the direction of picking a good recipe. 
 
 Authors: Lora Bednarek & Jiaxin Yang
 
@@ -50,7 +50,7 @@ Given these datasets, our primary question is: **Are there certain factors that 
 
 ### Data Cleaning and Exploratory Data Analysis
 
-First, we decide to merge those two dataframes based on *recipe_id* and get an combined dataframe. This is what it looks like:
+First, we decided to merge those two dataframes based on recipe_id and get a combined dataframe with all reviews for each recipe.
 
 
 |    | name                              |     id |   minutes |   contributor_id | submitted   | tags                              | nutrition                                    |   n_steps | steps                             | description                       | ingredients                       |   n_ingredients |          user_id |   recipe_id | date       |   rating | review                            |
@@ -62,7 +62,7 @@ First, we decide to merge those two dataframes based on *recipe_id* and get an c
 |  4 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 | 768828           |      306168 | 2013-08-02 |        5 | Loved this.  Be sure to comple... |
 
 - We replaced all "0" ratings with np.NaN to not skew the average ratings to lower. 
-- We added two columns, one contains the number of reviews for each recipe (*num_reviews*), and the other one contains the every review for each recipe (*reviews*). 
+- We added two columns based on reviews. One contains the number of reviews for each recipe (num_reviews), and the other one contains the every review for each recipe (reviews).
 - We split the *nutrition* column into 7 columns, each containing the amount of corresponding nutrition, then dropped the original *nutrition* column.
 - We calculated the *average rating* for each recipe.
 - We added the *season* column by the *sumbitted* time, indicating the season the recipe was posted. 
@@ -159,7 +159,9 @@ In the next step, we will analyze the missing values in our dataset.
 
 ### Assessment of Missingness
 
-There are three columns in our dataset have missing values, which are *name*, *description*, and *average_ratings*. The average ratings missingness is important to consider given our primary question.
+-There are three columns in our dataset that have missing values, which are name, description, and average_ratings.
+-We believe that the missingness of recipe ratings could be NMAR, as users may only rate recipes they particularly liked or disliked. In such cases, the missingness of ratings would be related to the unobserved ratings themselves, making it NMAR.
+-For each quantitative in the dataframe we ran a permutation test to see how significant their value differs with the absence of values in average_ratings.
 
 | **Column**|**Number of Missing Values** |
 | --- | --- |
@@ -229,10 +231,8 @@ p-value for *protein*: 0.16, fail to reject
   frameborder="0"
 ></iframe>
 
-**Related columns**: *minutes*, *num_reviews*, *n_steps*, *n_ingredients*, *total fat*, *sugar*, *saturated fat*, *carbohydrates*.
-
-**Conclusion**: The **related columns** are related to the missing values of *average_ratings*. Or we can say, the missingness of *average_ratings* is **Missing At Random (MAR)** that related with values of related columns.
-
+**Related columns**: *minutes*, *num_reviews*, *n_steps*, *n_ingredients*, *total fat*, *sugar*, *saturated fat*, *carbohydrates*.  
+**Conclusion**: -Conclusion: The above related columns are related to the missingness of average_ratings. In other words, the missingness of average_ratings is Missing At Random (MAR).   
 **Imputation**: After the analysis, we did probabilitic permutation based on *num_reviews*. That means the missing value of *average_ratings* will be filled with the value that has the similar *num_reviews*.  
 After the imputation, the mean of *average_ratings* changed from 4.625 to 4.624 and the standard deviation changed from 0.640 to 0.645.
 
@@ -240,8 +240,7 @@ After the imputation, the mean of *average_ratings* changed from 4.625 to 4.624 
 
 For our hypothesis test, we wanted to examine the relationship between number of reviews and the average rating of a recipe.
 
-**Null Hypothesis**: There is no association between number of reviews and ratings.
-
+**Null Hypothesis**: There is no association between number of reviews and ratings.  
 **Alternative Hypothesis**: There is a significant association between number of reviews and ratings. We expect the number of reviews to be positively associated with the ratings as more people may provide a review if it was a good recipe.
  
 <iframe
@@ -251,17 +250,15 @@ For our hypothesis test, we wanted to examine the relationship between number of
   frameborder="0"
 ></iframe>
 
-p < 0.05. Thus, we reject the null hypothesis that number of steps is correlated to average ratings. 
+p < 0.05. Thus, we **reject the null hypothesis** that number of steps is correlated to average ratings. 
 
 ### Framing a Prediction Problem
 
-We plan to create a **regression model** using above features to predict the **average rating** of the recipe. The reason we choose average rating is because the ratings shows people's overall opinion on the recipe and we want to know which recipes are most liked. We chose R^2, root mean squared error as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
+We plan to create a **regression model** using features in the recipes dataset to predict the average rating of the recipe. The reason we chose average rating is because the ratings show people’s overall opinion on the recipe and we want to know which recipes are most liked. We chose **$R^2$**, root mean squared error as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
 
-R-squared (R^2): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher R-squared value indicates a better fit of the model to the data.
-
-Root Mean Squared Error (RMSE): Represents the average absolute differences between the predicted and observed values. Lower RMSE values indicate better fit.
-
-Coefficients: In a linear regression model, coefficients indicate the relationship (direction and magnitude) between the features and the outcome variable. This is important for interpretability of our regressor.
+**R-squared** ($R^2$): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher R-squared value indicates a better fit of the model to the data.  
+**Root Mean Squared Error** (RMSE): Represents the average absolute differences between the predicted and observed values. Lower RMSE values indicate better fit.  
+**Coefficients**: In a linear regression model, coefficients indicate the relationship (direction and magnitude) between the features and the outcome variable. This is important for interpretability of our regressor.
 
 At the time of the prediction, we would NOT know the average rating. We would know the number of reviews, the number of steps, the nutritional content, the hand-written reviews, and the season the recipe was posted.
 
@@ -269,67 +266,52 @@ At the time of the prediction, we would NOT know the average rating. We would kn
 
 We chose the following features based on the EDA analysis, as these variables seem to be related:
 
-Number of reviews for a given recipe (quantitative),  
+- Number of reviews for a given recipe (quantitative),  
+- The amount of sodium in recipe (quantitative)
+- Our model has RMSE of **0.65**, and $R^2$ value of **0.0028**.  
 
-The amount of sodium in recipe (quantitative)
-
-Our model has RMSE of 0.65, and $R^2$ value of 0.0028.  
-
-Our current model is not good. The very low $R^2$ means that the model cannot explain the variance of the dataset; it appears to be underfit and we should add more features. Additionally, the low value for the coefficients indicate the need for other features and for feature engineering. 
+Our current model is *not good*. The very low $R^2$ means that the model cannot explain the variance of the dataset; it appears to be underfit and we should add more features. Additionally, the low value for the coefficients indicate the need for other features and for feature engineering. 
 
 
 ### Final Model
 
 We added the following features:
 
-"n_steps" (quantitative): This feature was added based on the results of the hypothesis test, indicating that average rating and number of steps are correlated. 
-
-"reviews" (qualitative): The content of the worded reviews should provide information on the rating.
-
-"season" (qualitative): The season the recipe was posted may impact the rating, as there are different seaonsal trends.
+- `"n_steps"` (quantitative): This feature was added based on the results of the hypothesis test, indicating that average rating and number of steps are correlated. 
+- `"reviews"` (qualitative): The content of the worded reviews should provide information on the rating.
+- `"season"` (qualitative): The season the recipe was posted may impact the rating, as there are different seaonsal trends.
 
 We performed the following feature engineering:
 
-SentimentAnalyzer: We applied this to the reviews. Value of -1 indicates a negative review, 0 indicates nutral, and 1 indicates positive review.
+**SentimentAnalyzer**: We applied this to the reviews. Value of -1 indicates a negative review, 0 indicates nutral, and 1 indicates positive review.  
+**OneHotEncoder**: We applied this to the qualitative season's column.  
+**StandardScaler**: We applied this to the quantitative columns to enable to coefficients to be interpretable. 
 
-OneHotEncoder: We applied this to the qualitative season's column.
-
-StandardScaler: We applied this to the quantitative columns to enable to coefficients to be interpretable. 
-
-We tested the hyperparameter "fit_intercept."
+We tested the hyperparameter `"fit_intercept."`
 
 Other hyperparameters we could have tried but didn't because it would affect ability to compare coefficients included the following:
 
-One Hot: drop = "first" or None. If we chose None, we could not interpret the coefficients due to mulitcolliniarity.
-
+One Hot: drop = "first" or None. If we chose None, we could not interpret the coefficients due to mulitcolliniarity.  
 Standard Scalar: with_mean or with_std = False or True. This would again render the coefficients uninterpretable as they would not be on the same scale.
 
 #### IMPROVED PERFORMANCE
 
 Our final model improved it's performance, performing well on the training and test data.
 
-Lower RMSE of 0.6102 and higher R^2 of 0.1177: Addition of useful features.
+Lower *RMSE* of **0.6102** and higher $R^2$ of **0.1177**: Addition of useful features.
 
 The coefficients are higher magnitude. Specifically, the Sentiment feature shows a strong positive correlation, which makes sense (more "positive" reviews should correspond to generally higher ratings).
 
 ### Fairness Analysis
 
-For our fairness analysis, we chose two groups: recipes posted in spring/summer and recipes posted in fall/winter. These seasons bring differing kinds of recipes being posted. Thus, the performance of our model may vary based on the season the initial recipe was posted during (and thus the season it is most likely intended for). If the model is unfair, then it would be important for us to adjust the model, or do additional training, to better capture the seasonal trends.
+For our fairness analysis, we chose two groups: recipes posted in **spring/summer** and recipes posted in **fall/winter**. These seasons bring differing kinds of recipes being posted. Thus, the performance of our model may vary based on the season the initial recipe was posted during (and thus the season it is most likely intended for). If the model is unfair, then it would be important for us to adjust the model, or do additional training, to better capture the seasonal trends.
+
+Hypothesis Testing:
+
+- **Null Hypothesis**: Our model is fair. Its $R^2$ for ratings given in spring/summer and fall/winter are roughly the same, and any differences are due to random chance.
+- **Alternative Hypothesis**: Our model is unfair. Its $R^2$ for recipes given in spring/summer is different than for fall/winter. We hypothesize a higher $R^2$ value for spring/summer because during this time, there are often more diverse recipes (with availability of fresh produce and with more leisure time for individuals), while fall/winter may tend to focus around holiday-focused, comfort recipes (with potentially less variability). 
+- **Test Statistics**: Root mean squared error (mrse).
+- **Significance Level**: 0.05
 
 
-Hypothesis Testing
-
-- **Null Hypothesis**: Our model is fair. Its R2 for ratings given in spring/summer and fall/winter are roughly the same, and any differences are due to random chance.
-- Alternative Hypothesis: Our model is unfair. Its R2 for recipes given in spring/summer is different than for fall/winter. We hypothesize a higher R2 value for spring/summer because during this time, there are often more diverse recipes (with availability of fresh produce and with more leisure time for individuals), while fall/winter may tend to focus around holiday-focused, comfort recipes (with potentially less variability). 
-- Test Statistics: Root mean squared error (mrse).
-- Significance Level: alpha = 0.05
-
-# Plot the distribution of permuted differences
-plt.hist(permuted_diffs, bins=30, edgecolor='k', alpha=0.7)
-plt.axvline(observed_diff, color='r', linestyle='--', label='Observed difference')
-plt.xlabel('Difference in RMSE')
-plt.ylabel('Frequency')
-plt.legend()
-plt.show()
-
-With p = 0.001, we reject our null hypothesis that our model is fair.
+With **p = 0.001**, we **reject our null hypothesis** that our model is fair.
