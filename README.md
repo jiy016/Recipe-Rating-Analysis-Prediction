@@ -269,9 +269,9 @@ p < 0.05. Thus, we **reject the null hypothesis** that number of steps is correl
 
 ### Framing a Prediction Problem
 
-We plan to create a **regression model** using features in the recipes dataset to predict the average rating of the recipe. The reason we chose average rating is because the ratings show people’s overall opinion on the recipe and we want to know which recipes are most liked. We chose **$R^2$**, root mean squared error as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
+We plan to create a **regression model** using features in the recipes dataset to predict the average rating of the recipe. The reason we chose average rating is because the ratings show people’s overall opinion on the recipe and we want to know which recipes are most liked. We chose **R<sup>2</sup>**, root mean squared error as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
 
-**R-squared** ($R^2$): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher $R^2$ value indicates a better fit of the model to the data.  
+**R-squared** (R<sup>2</sup>): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher R<sup>2</sup> value indicates a better fit of the model to the data.  
 **Root Mean Squared Error** (RMSE): Represents the average absolute differences between the predicted and observed values. Lower RMSE values indicate better fit.  
 **Coefficients**: In a linear regression model, coefficients indicate the relationship (direction and magnitude) between the features and the outcome variable. This is important for interpretability of our regressor.
 
@@ -283,9 +283,9 @@ We chose the following features based on the EDA analysis, as these variables se
 
 - `num_reviews`: Number of reviews for a given recipe (*quantitative*),  
 - `sodium`: The amount of sodium in recipe (*quantitative*)
-- Our model has RMSE of **0.64**, and $R^2$ value of **0.00256**.  
+- Our model has RMSE of **0.64**, and R<sup>2</sup> value of **0.00256**.  
 
-Our current model is *not good*. The very low $R^2$ means that the model cannot explain the variance of the dataset; it appears to be **underfit** and we should *add more features*. Additionally, the low value for the coefficients indicate the need for other features and for *feature engineering*. 
+Our current model is *not good*. The very low R<sup>2</sup> means that the model cannot explain the variance of the dataset; it appears to be **underfit** and we should *add more features*. Additionally, the low value for the coefficients indicate the need for other features and for *feature engineering*. 
 
 
 ### Final Model
@@ -314,7 +314,7 @@ Other hyperparameters we could have tried but didn't because it would affect abi
 
 Our final model improved it's performance, performing well on the training and test data.
 
-Lower *RMSE* of **0.6102** and higher $R^2$ of **0.1177**: Addition of useful features.
+Lower *RMSE* of **0.6102** and higher R<sup>2</sup> of **0.1177**: Addition of useful features.
 
 The coefficients are higher magnitude. Specifically, the Sentiment feature shows a strong positive correlation, which makes sense (more "positive" reviews should correspond to generally higher ratings).
 
@@ -325,8 +325,8 @@ For our fairness analysis, we chose two groups: recipes posted in **spring/summe
 Hypothesis Testing:
 
 - **Null Hypothesis**: Our model is fair. Its R<sup>2</sup> for ratings given in spring/summer and fall/winter are roughly the same, and any differences are due to random chance.
-- **Alternative Hypothesis**: Our model is unfair. Its $R^2$ for recipes given in spring/summer is different than for fall/winter. We hypothesize a higher R^2 value for spring/summer because during this time, there are often more diverse recipes (with availability of fresh produce and with more leisure time for individuals), while fall/winter may tend to focus around holiday-focused, comfort recipes (with potentially less variability). 
-- **Test Statistics**: R^2
+- **Alternative Hypothesis**: Our model is unfair. Its R<sup>2</sup> for recipes given in spring/summer is different than for fall/winter. We hypothesize a higher R<sup>2</sup> value for spring/summer because during this time, there are often more diverse recipes (with availability of fresh produce and with more leisure time for individuals), while fall/winter may tend to focus around holiday-focused, comfort recipes (with potentially less variability). 
+- **Test Statistics**: R<sup>2</sup>
 - **Significance Level**: 0.05
 
 
@@ -337,4 +337,4 @@ Hypothesis Testing:
   frameborder="0"
 ></iframe>
 
-With **p = 0.001**, we **fail to reject our null hypothesis** that our model is fair.
+With **p = 0.546**, we **fail to reject our null hypothesis** that our model is fair.
