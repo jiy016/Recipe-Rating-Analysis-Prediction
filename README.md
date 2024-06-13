@@ -196,14 +196,14 @@ After doing the permutation test, this is what we get:
 
 | **Column** | **p-value** | **Relation** |
 | --- | --- | --- |
-| `minutes` | 0.038 | √ |
+| `minutes` | 0.042 | √ |
 | `num_reviews` | 0.00 | √ |
 | `n_steps` | 0.00 | √ |
 | `n_ingredients` | 0.00 | √ |
 | `total fat` | 0.00 | √ |
 | `sugar` | 0.00 | √ |
-| `sodium` | 0.9 |  |
-| `protein` | 0.198 |  |
+| `sodium` | 0.91 |  |
+| `protein` | 0.21 |  |
 | `saturated fat` | 0.00 | √ |
 | `carbohydrates` | 0.00 | √ |
 
@@ -226,7 +226,7 @@ p-value for `minutes`: 0.042, reject
 
 But there are also columns not related to the missingness. For example, column *sodium* has a high p-value of **0.9**, and *protein* column has a p-value of **0.198**, which suggests that we **fail to reject** the null hypothesis of those two columns.
 
-p-value for `sodium`: 0.9, fail to reject
+p-value for `sodium`: 0.91, fail to reject
 <iframe
   src="assets/perm_sodium.html"
   width="800"
@@ -234,7 +234,7 @@ p-value for `sodium`: 0.9, fail to reject
   frameborder="0"
   style="margin-bottom: 20px;"
 ></iframe>
-p-value for `protein`: 0.198, fail to reject
+p-value for `protein`: 0.21, fail to reject
 <iframe
   src="assets/perm_protein.html"
   width="800"
@@ -245,7 +245,7 @@ p-value for `protein`: 0.198, fail to reject
 **Related columns**: `minutes`, `num_reviews`, `n_steps`, `n_ingredients`, `total fat`, `sugar`, `saturated fat`, `carbohydrates`.  
 **Conclusion**: The above **related columns** are related to the missingness of `average_ratings`. In other words, the missingness of `average_ratings` is **Missing At Random** (MAR).   
 **Imputation**: After the analysis, we did probabilitic permutation based on `num_reviews`. That means the missing value of `average_ratings` will be filled with the value that has the similar `num_reviews`.  
-After the imputation, the *mean* of `average_ratings` changed from 4.625 to 4.624 and the *standard deviation* changed from 0.640 to 0.645.
+After the imputation, the *mean* of `average_ratings` changed from 4.625 to 4.624 and the *standard deviation* changed from 0.641 to 0.643.
 
 ### Hypothesis Testing
 
@@ -263,7 +263,7 @@ For our hypothesis test, we wanted to examine the relationship between number of
   frameborder="0"
 ></iframe>
 
-p < 0.05. Thus, we **reject the null hypothesis** that number of steps is correlated to average ratings. 
+p = 0.00 < 0.05. Thus, we **reject the null hypothesis** that number of steps is correlated to average ratings. 
 
 ### Framing a Prediction Problem
 
@@ -281,7 +281,7 @@ We chose the following features based on the EDA analysis, as these variables se
 
 - `num_reviews`: Number of reviews for a given recipe (*quantitative*),  
 - `sodium`: The amount of sodium in recipe (*quantitative*)
-- Our model has RMSE of **0.64**, and R<sup>2</sup> value of **0.00256**.  
+- Our model has RMSE of **0.637**, and R<sup>2</sup> value of **0.002**.  
 
 Our current model is *not good*. The very low R<sup>2</sup> means that the model cannot explain the variance of the dataset; it appears to be **underfit** and we should *add more features*. Additionally, the low value for the coefficients indicate the need for other features and for *feature engineering*. 
 
@@ -312,7 +312,7 @@ Other hyperparameters we could have tried but didn't because it would affect abi
 
 Our final model improved it's performance, performing well on the training and test data.
 
-Lower *RMSE* of **0.6102** and higher R<sup>2</sup> of **0.1177**: These trends are most likely due to the addition of useful features; namely the *Review Sentiment* feature.
+Lower *RMSE* of **0.61** and higher R<sup>2</sup> of **0.12**: These trends are most likely due to the addition of useful features; namely the *Review Sentiment* feature.
 
 The coefficients are higher magnitude. Specifically, the Sentiment feature shows a strong positive correlation, which makes sense (more "positive" reviews should correspond to generally higher ratings).
 
@@ -327,7 +327,6 @@ Hypothesis Testing:
 - **Test Statistics**: R<sup>2</sup>
 - **Significance Level**: 0.05
 
-
 <iframe
   src="assets/fairness.html"
   width="800"
@@ -335,4 +334,4 @@ Hypothesis Testing:
   frameborder="0"
 ></iframe>
 
-With **p = 0.546**, we **fail to reject our null hypothesis** that our model is fair.
+With **p = 0.31**, we **fail to reject our null hypothesis** that our model is fair.
