@@ -224,7 +224,7 @@ p-value for `minutes`: 0.042, reject
   frameborder="0"
 ></iframe>
 
-But there are also columns not related to the missingness. For example, column *sodium* has a high p-value of **0.9**, and *protein* column has a p-value of **0.198**, which suggests that we **fail to reject** the null hypothesis of those two columns.
+But there are also columns not related to the missingness. For example, column *sodium* has a high p-value of **0.91**, and *protein* column has a p-value of **0.21**, which suggests that we **fail to reject** the null hypothesis of those two columns.
 
 p-value for `sodium`: 0.91, fail to reject
 <iframe
@@ -263,7 +263,7 @@ For our hypothesis test, we wanted to examine the relationship between number of
   frameborder="0"
 ></iframe>
 
-p = 0.00 < 0.05. Thus, we **reject the null hypothesis** that number of steps is correlated to average ratings. 
+p-value = 0.00 < 0.05. Thus, we **reject the null hypothesis** that number of steps is correlated to average ratings. 
 
 ### Framing a Prediction Problem
 
