@@ -1,36 +1,32 @@
-# Recipe Rating Analysis and Prediction
-
-# Overview
-We love food and cooking. However, as college students, we are both very busy and are tired of making a recipe we found online and not enjoying the meal. With this in mind, we want to know if there are certain types of recipes and components of their reviews that could lead us in the direction of picking a good recipe. 
-
+# Recipe Ratings: Analysis and Prediction
 Authors: Lora Bednarek & Jiaxin Yang
 
 ### Introduction
 
-We love food and cooking. However, as college students, we are both very busy and are tired of making a recipe we found online and not enjoying the meal. With this in mind, we want to know if there are certain types of recipes and qualities of reviews that could lead us in the direction of picking a good recipe. We used two datasets obtained from [food.com](https://www.food.com) to explore this.
+We love food and cooking. However, as college students, we are both very busy and are tired of making a recipe we found online and not enjoying the meal. With this in mind, we want to know if there are certain types of recipes and components of their reviews that could lead us in the direction of picking a good recipe. We used two datasets obtained from [food.com](https://www.food.com) to explore this.
 
 We downloaded the csv files from the [link](https://drive.google.com/file/d/1kIbMz6jlhleiZ9_3QthmUnifoSds_2EI/view) provided on the course website. 
 
-Our dataset includes information about recipes and their corresponding ratings, split into two main csv files: one containing recipe information (*RAW_recipes.csv*), and another file containing user interactions like ratings and reviews (*RAW_interactions.csv*).
+Our dataset includes information about recipes and their corresponding ratings, split into two main csv files: one containing recipe information (**RAW_recipes.csv**), and another file containing user interactions like ratings and reviews (**RAW_interactions.csv**).
 
-- *RAW_recipes.csv* contains recipes.
-- *RAW_interactions.csv* contains reviews and ratings submitted for the recipes in *RAW_recipes.csv*.
+- **RAW_recipes.csv** contains recipes.
+- **RAW_interactions.csv** contains reviews and ratings submitted for the recipes in *RAW_recipes.csv*.
 
 For **RAW_recipes** dataframe, it has 83782 rows × 12 columns.
 Each row has the following columns:
 
 **Column**|**Description**
 ---|---
-*'name'*|Recipe name
-*'id'*|Recipe ID
-*'minutes'*|Minutes to prepare recipe
-*'contributor_id'*|User ID who submitted this recipe
-*'submitted'*|Date recipe was submitted
-*'tags'*|Food.com tags for recipe
-*'nutrition'*|Nutrition information in the form [calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), carbohydrates (PDV)]; PDV stands for “percentage of daily value”
-*'n_steps'*|Number of steps in recipe
-*'steps'*|Text for recipe steps, in order
-*'description'*|User-provided description
+`name`|Recipe name
+`id`|Recipe ID
+`minutes`|Minutes to prepare recipe
+`contributor_id`|User ID who submitted this recipe
+`submitted`|Date recipe was submitted
+`tags`|Food.com tags for recipe
+`nutrition`|Nutrition information in the form [calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), carbohydrates (PDV)]; PDV stands for “percentage of daily value”
+`n_steps`|Number of steps in recipe
+`steps`|Text for recipe steps, in order
+`description`|User-provided description
 
 
 For **RAW_interactions** dataframe, it has 731927 rows × 5 columns. This is having much more rows because there could be multiple ratings and reviews for a single recipe.
@@ -38,11 +34,11 @@ Each row has the following columns:
 
 | **Column**|**Description** |
 | --- | --- |
-| *'user_id'* | User ID |
-| *'recipe_id'* | Recipe ID |
-| *'date'* | Date of interaction |
-| *'rating'* | Rating given |
-| *'review'* | Review text |
+| `user_id` | User ID |
+| `recipe_id` | Recipe ID |
+| `date` | Date of interaction |
+| `rating` | Rating given |
+| `review` | Review text |
 
 
 Given these datasets, our primary question is: **Are there certain factors that play into ratings of a recipe? If so, can we predict the rating of a recipe given other factors?**
@@ -50,8 +46,7 @@ Given these datasets, our primary question is: **Are there certain factors that 
 
 ### Data Cleaning and Exploratory Data Analysis
 
-First, we decided to merge those two dataframes based on recipe_id and get a combined dataframe with all reviews for each recipe.
-
+First, we decided to merge those two dataframes based on `recipe_id` and get a combined dataframe with all reviews for each recipe.
 
 |    | name                              |     id |   minutes |   contributor_id | submitted   | tags                              | nutrition                                    |   n_steps | steps                             | description                       | ingredients                       |   n_ingredients |          user_id |   recipe_id | date       |   rating | review                            |
 |---:|:----------------------------------|-------:|----------:|-----------------:|:------------|:----------------------------------|:---------------------------------------------|----------:|:----------------------------------|:----------------------------------|:----------------------------------|----------------:|-----------------:|------------:|:-----------|---------:|:----------------------------------|
@@ -61,28 +56,28 @@ First, we decided to merge those two dataframes based on recipe_id and get a com
 |  3 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 |      1.19628e+06 |      306168 | 2009-04-13 |        5 | I made this for my son's first... |
 |  4 | 412 broccoli casserole            | 306168 |        40 |            50969 | 2008-05-30  | ['60-minutes-or-less', 'time-t... | [194.8, 20.0, 6.0, 32.0, 22.0, 36.0, 3.0]    |         6 | ['preheat oven to 350 degrees'... | since there are already 411 re... | ['frozen broccoli cuts', 'crea... |               9 | 768828           |      306168 | 2013-08-02 |        5 | Loved this.  Be sure to comple... |
 
-- We replaced all "0" ratings with np.NaN to not skew the average ratings to lower. 
-- We added two columns based on reviews. One contains the number of reviews for each recipe (num_reviews), and the other one contains the every review for each recipe (reviews).
-- We split the *nutrition* column into 7 columns, each containing the amount of corresponding nutrition, then dropped the original *nutrition* column.
-- We calculated the *average rating* for each recipe.
-- We added the *season* column by the *sumbitted* time, indicating the season the recipe was posted. 
+- We replaced all **0** ratings with **np.NaN** to not skew the average ratings to lower. 
+- We added two columns based on reviews. One contains the number of reviews for each recipe (`num_reviews`), and the other one contains the every review for each recipe (`reviews`).
+- We split the `nutrition` column into 7 columns, each containing the amount of corresponding nutrition, then dropped the original `nutrition` column.
+- We calculated the **average rating** for each recipe.
+- We added the `season` column by the `sumbitted` time, indicating the season the recipe was posted. 
   - Spring: 3-5. Summer: 6-8. Fall: 7-9. Winter: 12-2 (month).
 
 After adding the following columns:
 
 | **Column**|**Description** |
 | --- | --- |
-| *'num_reviews'* | The number of reviews of this recipe |
-| *'reviews'* | All of the written reviews of this recipe |
-| *'average_ratings'* | Average rating of this recipe |
-| *'calories '* | The amount of calories |
-| *'total fat'* | The amount of total fat |
-| *'sugar '* | The amount of sugar |
-| *'sodium  '* | The amount of sodium |
-| *'protein  '* | The amount of protein |
-| *'saturated fat '* | The amount of saturated fat |
-| *'carbohydrates  '* | The amount of carbohydrates |
-| *'season  '* | The season of the submittion time |
+| `num_reviews` | The number of reviews of this recipe |
+| `reviews` | All of the written reviews of this recipe |
+| `average_ratings` | Average rating of this recipe |
+| `calories` | The amount of calories |
+| `total` fat | The amount of total fat |
+| `sugar` | The amount of sugar |
+| `sodium` | The amount of sodium |
+| `protein` | The amount of protein |
+| `saturated fat` | The amount of saturated fat |
+| `carbohydrates` | The amount of carbohydrates |
+| `season` | The season of the submittion time |
 
 
 This is the dataframe after the data cleaning. It contains a row for each recipe:
@@ -113,7 +108,7 @@ Generally, the recipes are getting pretty good ratings. But, there is a lot of v
 
 #### Bivariate Analysis
 
-We wanted to examine the relationship between number of reviews and the average rating of a recipe. It appears that as ratings goes up, number of reviews also increases.
+We wanted to examine the relationship between number of reviews (`num_reviews`) and the average rating (`average_ratings`) of a recipe. It appears that as ratings goes up, number of reviews also increases.
 
 <iframe
   src="assets/bivariate_reviews_rating.html"
@@ -122,7 +117,7 @@ We wanted to examine the relationship between number of reviews and the average 
   frameborder="0"
 ></iframe>
 
-Next, we wanted to see if the number of steps of a recipe affects the rating. It appears that as the number of steps goes up, the average rating goes up as well. Possibly, people are spending more time to make better meals.
+Next, we wanted to see if the number of steps (`n_steps`) of a recipe affects the average rating (`average_ratings`). It appears that as the number of steps goes up, the average rating goes up as well. Possibly, people are spending more time to make better meals.
 
 <iframe
   src="assets/bivariate_steps_rating.html"
@@ -131,7 +126,7 @@ Next, we wanted to see if the number of steps of a recipe affects the rating. It
   frameborder="0"
 ></iframe>
 
-Finally, we wanted to look at the effect of season the recipe was posted on the rating. The means are pretty similar across the seasons.
+Finally, we wanted to look at the effect of season (`season`) the recipe was posted on the rating (`average_ratings`). The means are pretty similar across the seasons.
 <iframe
   src="assets/bivariate_by_season.html"
   width="800"
@@ -141,7 +136,7 @@ Finally, we wanted to look at the effect of season the recipe was posted on the 
 
 #### Interesting Aggregates
 
-After having a basic understanding of the dataframe, we get this table as a summary of the relation between average ratings and the means of the different quantitative variables.
+After having a basic understanding of the dataframe, we get this table as a summary of the relation between `average_ratings` and the means of the different *quantitative* variables.
 
 |   rating_star |   num_reviews |   n_steps |   n_ingredients |
 |--------------:|--------------:|----------:|----------------:|
@@ -151,30 +146,48 @@ After having a basic understanding of the dataframe, we get this table as a summ
 |             4 |       4.28821 |   9.75441 |         9.20603 |
 |             5 |       2.09116 |  10.2251  |         9.20808 |
 
-We can see that the number of reviews has a relatively higher variance among different ratings compared to other parameters. Reviews could be an important factor to our question. There additionally appears to be a trend for the amount of sodium.
+We can see that the number of reviews (`num_reviews`) has a relatively higher variance among different ratings compared to other parameters. Reviews could be an important factor to our question. There additionally appears to be a trend for the amount of sodium.
 
-Finally, we wanted to look at the variation of reviews across the seasons the recipe was posted. It looks like those made in spring/summer have higher standard deviations than fall/winter.
+|   rating_star |   calories |   total fat |   sugar |   sodium |   protein |   saturated fat |   carbohydrates |
+|--------------:|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|
+|             1 |    446.125 |     34.7623 | 75.8475 |  47.377  |   29.6508 |         44.541  |         14.8377 |
+|             2 |    442.994 |     33.5662 | 74.2163 |  33.135  |   30.4675 |         44.4338 |         15.0563 |
+|             3 |    444.706 |     32.2914 | 80.5751 |  33.2647 |   33.7944 |         40.1756 |         15.2162 |
+|             4 |    411.912 |     30.5593 | 59.3828 |  27.5738 |   34.037  |         37.3718 |         13.1025 |
+|             5 |    434.206 |     33.4386 | 71.4998 |  29.1008 |   32.5696 |         41.3181 |         13.8482 |
+
+It appears as though there are some trends for the number of reviews (`num_reviews`) and amount of sodium (`sodium`). 
+
+Finally, we wanted to look at the variation of reviews across the seasons (`season`) the recipe was posted.
+
+|    | season   |   average_ratings |
+|---:|:---------|------------------:|
+|  0 | fall     |          0.658174 |
+|  1 | spring   |          0.61892  |
+|  2 | summer   |          0.632576 |
+|  3 | winter   |          0.656204 |
+
+ It looks like those made in **spring/summer** have higher standard deviations than **fall/winter**.
 
 In the next step, we will analyze the missing values in our dataset.
 
 ### Assessment of Missingness
 
--There are three columns in our dataset that have missing values, which are name, description, and average_ratings.
--We believe that the missingness of recipe ratings could be NMAR, as users may only rate recipes they particularly liked or disliked. In such cases, the missingness of ratings would be related to the unobserved ratings themselves, making it NMAR.
--For each quantitative in the dataframe we ran a permutation test to see how significant their value differs with the absence of values in average_ratings.
+- There are three columns in our dataset that have missing values, which are `name`, `description`, and `average_ratings`.
 
 | **Column**|**Number of Missing Values** |
 | --- | --- |
-| *'name'* | 1 |
-| *'description'* | 70 |
-| *'average_ratings '* | 2609 |
+| `name` | 1 |
+| `description` | 70 |
+| `average_ratings` | 2609 |
+
+- We believe that the missingness of recipe ratings could be **NMAR**, as users may only rate recipes they particularly liked or disliked. In such cases, the missingness of ratings would be related to the unobserved ratings themselves, making it NMAR.  
+- For each *quantitative* column in the dataframe we ran a permutation test to see how significant their value differs with the absence of values in `average_ratings`.
 
 #### NMAR Analysis 
 
-We believe that the missingness of recipe ratings could be NMAR, as if users may to only rate recipes they particularly liked or disliked. In such cases, the missingness of ratings would be related to the unobserved ratings themselves, making it NMAR.
-
-For each quantitative in the dataframe:  
-Running a permutation test to see how significant their value differs from the absence of values in *average_ratings*.
+For each *quantitative* in the dataframe:  
+Running a permutation test to see how significant their value differs from the absence of values in *`average_ratings`*.
 
 - **Null Hypothesis**: The missingness of values in *average_ratings* are not related to the value of this column.
 - **Alternative Hypothesis**: The missingness of values in *average_ratings* are related to the value of this column.
@@ -185,27 +198,27 @@ After doing the permutation test, this is what we get:
 
 | **Column** | **p-value** | **Relation** |
 | --- | --- | --- |
-| *'minutes'* | 0.042 | √ |
-| *'num_reviews'* | 0.00 | √ |
-| *'n_steps'* | 0.00 | √ |
-| *'n_ingredients'* | 0.00 | √ |
-| *'total fat'* | 0.00 | √ |
-| *'sugar'* | 0.00 | √ |
-| *'sodium'* | 0.87 |  |
-| *'protein'* | 0.16 |  |
-| *'saturated fat'* | 0.00 | √ |
-| *'carbohydrates'* | 0.00 | √ |
+| `minutes` | 0.038 | √ |
+| `num_reviews` | 0.00 | √ |
+| `n_steps` | 0.00 | √ |
+| `n_ingredients` | 0.00 | √ |
+| `total fat` | 0.00 | √ |
+| `sugar` | 0.00 | √ |
+| `sodium` | 0.9 |  |
+| `protein` | 0.198 |  |
+| `saturated fat` | 0.00 | √ |
+| `carbohydrates` | 0.00 | √ |
 
 Based on the permutation test results, we **reject the null hypothesis** for most of columns, since having a p-value less than 0.05 means that under the null hypothesis, the probability of this situation happens due to chance is less than 5%.
 
-p-value for sugar: 0.00, reject
+p-value for `num_reviews`: 0.00, reject
 <iframe
-  src="assets/perm_sugar.html"
+  src="assets/perm_num_reviews.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-p-value for minutes: 0.042, reject
+p-value for `minutes`: 0.042, reject
 <iframe
   src="assets/perm_minutes.html"
   width="800"
@@ -213,9 +226,9 @@ p-value for minutes: 0.042, reject
   frameborder="0"
 ></iframe>
 
-But there are also columns not related to the missingness. For example, column *sodium* has a high p-value of **0.896**, and *protein* column has a p-value of **0.16**, which suggests that we **fail to reject** the null hypothesis of those two columns.
+But there are also columns not related to the missingness. For example, column *sodium* has a high p-value of **0.9**, and *protein* column has a p-value of **0.198**, which suggests that we **fail to reject** the null hypothesis of those two columns.
 
-p-value for *sodium*: 0.87, fail to reject
+p-value for `sodium`: 0.9, fail to reject
 <iframe
   src="assets/perm_sodium.html"
   width="800"
@@ -223,7 +236,7 @@ p-value for *sodium*: 0.87, fail to reject
   frameborder="0"
   style="margin-bottom: 20px;"
 ></iframe>
-p-value for *protein*: 0.16, fail to reject
+p-value for `protein`: 0.198, fail to reject
 <iframe
   src="assets/perm_protein.html"
   width="800"
@@ -232,9 +245,9 @@ p-value for *protein*: 0.16, fail to reject
 ></iframe>
 
 **Related columns**: *minutes*, *num_reviews*, *n_steps*, *n_ingredients*, *total fat*, *sugar*, *saturated fat*, *carbohydrates*.  
-**Conclusion**: -Conclusion: The above related columns are related to the missingness of average_ratings. In other words, the missingness of average_ratings is Missing At Random (MAR).   
-**Imputation**: After the analysis, we did probabilitic permutation based on *num_reviews*. That means the missing value of *average_ratings* will be filled with the value that has the similar *num_reviews*.  
-After the imputation, the mean of *average_ratings* changed from 4.625 to 4.624 and the standard deviation changed from 0.640 to 0.645.
+**Conclusion**: The above **related columns** are related to the missingness of `average_ratings`. In other words, the missingness of `average_ratings` is **Missing At Random** (MAR).   
+**Imputation**: After the analysis, we did probabilitic permutation based on `num_reviews`. That means the missing value of `average_ratings` will be filled with the value that has the similar `num_reviews`.  
+After the imputation, the *mean* of `average_ratings` changed from 4.625 to 4.624 and the *standard deviation* changed from 0.640 to 0.645.
 
 ### Hypothesis Testing
 
@@ -242,6 +255,8 @@ For our hypothesis test, we wanted to examine the relationship between number of
 
 **Null Hypothesis**: There is no association between number of reviews and ratings.  
 **Alternative Hypothesis**: There is a significant association between number of reviews and ratings. We expect the number of reviews to be positively associated with the ratings as more people may provide a review if it was a good recipe.
+**Test Statistic**: Correlation Coefficient.
+**Significance Level**: 0.05
  
 <iframe
   src="assets/hypo_test.html"
@@ -256,7 +271,7 @@ p < 0.05. Thus, we **reject the null hypothesis** that number of steps is correl
 
 We plan to create a **regression model** using features in the recipes dataset to predict the average rating of the recipe. The reason we chose average rating is because the ratings show people’s overall opinion on the recipe and we want to know which recipes are most liked. We chose **$R^2$**, root mean squared error as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
 
-**R-squared** ($R^2$): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher R-squared value indicates a better fit of the model to the data.  
+**R-squared** ($R^2$): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher $R^2$ value indicates a better fit of the model to the data.  
 **Root Mean Squared Error** (RMSE): Represents the average absolute differences between the predicted and observed values. Lower RMSE values indicate better fit.  
 **Coefficients**: In a linear regression model, coefficients indicate the relationship (direction and magnitude) between the features and the outcome variable. This is important for interpretability of our regressor.
 
@@ -266,33 +281,34 @@ At the time of the prediction, we would NOT know the average rating. We would kn
 
 We chose the following features based on the EDA analysis, as these variables seem to be related:
 
-- Number of reviews for a given recipe (quantitative),  
-- The amount of sodium in recipe (quantitative)
-- Our model has RMSE of **0.65**, and $R^2$ value of **0.0028**.  
+- `num_reviews`: Number of reviews for a given recipe (*quantitative*),  
+- `sodium`: The amount of sodium in recipe (*quantitative*)
+- Our model has RMSE of **0.64**, and $R^2$ value of **0.00256**.  
 
-Our current model is *not good*. The very low $R^2$ means that the model cannot explain the variance of the dataset; it appears to be underfit and we should add more features. Additionally, the low value for the coefficients indicate the need for other features and for feature engineering. 
+Our current model is *not good*. The very low $R^2$ means that the model cannot explain the variance of the dataset; it appears to be **underfit** and we should *add more features*. Additionally, the low value for the coefficients indicate the need for other features and for *feature engineering*. 
 
 
 ### Final Model
 
 We added the following features:
 
-- `"n_steps"` (quantitative): This feature was added based on the results of the hypothesis test, indicating that average rating and number of steps are correlated. 
-- `"reviews"` (qualitative): The content of the worded reviews should provide information on the rating.
-- `"season"` (qualitative): The season the recipe was posted may impact the rating, as there are different seaonsal trends.
+- `n_steps` (*quantitative*): This feature was added based on the results of the hypothesis test, indicating that average rating and number of steps are correlated. 
+- `reviews` (*qualitative*): The content of the worded reviews should provide information on the rating.
+- `season` (*qualitative*): The season the recipe was posted may impact the rating, as there are different seaonsal trends.
 
-We performed the following feature engineering:
+We performed the following *feature engineering*:
 
-**SentimentAnalyzer**: We applied this to the reviews. Value of -1 indicates a negative review, 0 indicates nutral, and 1 indicates positive review.  
-**OneHotEncoder**: We applied this to the qualitative season's column.  
-**StandardScaler**: We applied this to the quantitative columns to enable to coefficients to be interpretable. 
+**SentimentAnalyzer**: We applied this to the `reviews`. 
+- Value of -1 indicates a negative review, 0 indicates nutral, and 1 indicates positive review.  
+**OneHotEncoder**: We applied this to the *qualitative* `season` column.  
+**StandardScaler**: We applied this to the *quantitative* columns to enable to coefficients to be interpretable. 
 
-We tested the hyperparameter `"fit_intercept."`
+We tested the hyperparameter `fit_intercept`.
 
 Other hyperparameters we could have tried but didn't because it would affect ability to compare coefficients included the following:
 
-One Hot: drop = "first" or None. If we chose None, we could not interpret the coefficients due to mulitcolliniarity.  
-Standard Scalar: with_mean or with_std = False or True. This would again render the coefficients uninterpretable as they would not be on the same scale.
+*One Hot*: drop = "first" or None. If we chose None, we could not interpret the coefficients due to *mulitcolliniarity*.  
+*Standard Scalar*: with_mean or with_std = False or True. This would again render the coefficients uninterpretable as they would not be on the same scale.
 
 #### IMPROVED PERFORMANCE
 
@@ -308,10 +324,17 @@ For our fairness analysis, we chose two groups: recipes posted in **spring/summe
 
 Hypothesis Testing:
 
-- **Null Hypothesis**: Our model is fair. Its $R^2$ for ratings given in spring/summer and fall/winter are roughly the same, and any differences are due to random chance.
-- **Alternative Hypothesis**: Our model is unfair. Its $R^2$ for recipes given in spring/summer is different than for fall/winter. We hypothesize a higher $R^2$ value for spring/summer because during this time, there are often more diverse recipes (with availability of fresh produce and with more leisure time for individuals), while fall/winter may tend to focus around holiday-focused, comfort recipes (with potentially less variability). 
-- **Test Statistics**: Root mean squared error (mrse).
+- **Null Hypothesis**: Our model is fair. Its R<sup>2</sup> for ratings given in spring/summer and fall/winter are roughly the same, and any differences are due to random chance.
+- **Alternative Hypothesis**: Our model is unfair. Its $R^2$ for recipes given in spring/summer is different than for fall/winter. We hypothesize a higher R^2 value for spring/summer because during this time, there are often more diverse recipes (with availability of fresh produce and with more leisure time for individuals), while fall/winter may tend to focus around holiday-focused, comfort recipes (with potentially less variability). 
+- **Test Statistics**: R^2
 - **Significance Level**: 0.05
 
 
-With **p = 0.001**, we **reject our null hypothesis** that our model is fair.
+<iframe
+  src="assets/fairness.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+With **p = 0.001**, we **fail to reject our null hypothesis** that our model is fair.
