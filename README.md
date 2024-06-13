@@ -59,7 +59,7 @@ First, we decided to merge those two dataframes based on `recipe_id` and get a c
 - We replaced all **0** ratings with **np.NaN** to not skew the average ratings to lower. 
 - We added two columns based on reviews. One contains the number of reviews for each recipe (`num_reviews`), and the other one contains the every review for each recipe (`reviews`).
 - We split the `nutrition` column into 7 columns, each containing the amount of corresponding nutrition, then dropped the original `nutrition` column.
-- We calculated the **average rating** for each recipe.
+- We calculated the `average_rating` for each recipe.
 - We added the `season` column by the `sumbitted` time, indicating the season the recipe was posted. 
   - Spring: 3-5. Summer: 6-8. Fall: 7-9. Winter: 12-2 (month).
 
@@ -146,8 +146,6 @@ After having a basic understanding of the dataframe, we get this table as a summ
 |             4 |       4.28821 |   9.75441 |         9.20603 |
 |             5 |       2.09116 |  10.2251  |         9.20808 |
 
-We can see that the number of reviews (`num_reviews`) has a relatively higher variance among different ratings compared to other parameters. Reviews could be an important factor to our question. There additionally appears to be a trend for the amount of sodium.
-
 |   rating_star |   calories |   total fat |   sugar |   sodium |   protein |   saturated fat |   carbohydrates |
 |--------------:|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|
 |             1 |    446.125 |     34.7623 | 75.8475 |  47.377  |   29.6508 |         44.541  |         14.8377 |
@@ -156,7 +154,7 @@ We can see that the number of reviews (`num_reviews`) has a relatively higher va
 |             4 |    411.912 |     30.5593 | 59.3828 |  27.5738 |   34.037  |         37.3718 |         13.1025 |
 |             5 |    434.206 |     33.4386 | 71.4998 |  29.1008 |   32.5696 |         41.3181 |         13.8482 |
 
-It appears as though there are some trends for the number of reviews (`num_reviews`) and amount of sodium (`sodium`). 
+We can see that the number of reviews (`num_reviews`) has a relatively higher variance among different ratings compared to other parameters. Reviews could be an important factor to our question. There additionally appears to be a trend for the amount of sodium (`sodium`).
 
 Finally, we wanted to look at the variation of reviews across the seasons (`season`) the recipe was posted.
 
@@ -167,7 +165,7 @@ Finally, we wanted to look at the variation of reviews across the seasons (`seas
 |  2 | summer   |          0.632576 |
 |  3 | winter   |          0.656204 |
 
- It looks like those made in **spring/summer** have higher standard deviations than **fall/winter**.
+ It looks like those made in **spring/summer** have lower standard deviations than **fall/winter**.
 
 In the next step, we will analyze the missing values in our dataset.
 
@@ -187,10 +185,10 @@ In the next step, we will analyze the missing values in our dataset.
 #### NMAR Analysis 
 
 For each *quantitative* in the dataframe:  
-Running a permutation test to see how significant their value differs from the absence of values in *`average_ratings`*.
+Running a permutation test to see how significant their value differs from the absence of values in `average_ratings`.
 
-- **Null Hypothesis**: The missingness of values in *average_ratings* are not related to the value of this column.
-- **Alternative Hypothesis**: The missingness of values in *average_ratings* are related to the value of this column.
+- **Null Hypothesis**: The missingness of values in `average_ratings` are not related to the value of this column.
+- **Alternative Hypothesis**: The missingness of values in `average_ratings` are related to the value of this column.
 - **Test Statistics**: Absolute differences in means.
 - **Significance Level**: 0.05
 
@@ -254,8 +252,8 @@ After the imputation, the *mean* of `average_ratings` changed from 4.625 to 4.62
 For our hypothesis test, we wanted to examine the relationship between number of reviews and the average rating of a recipe.
 
 **Null Hypothesis**: There is no association between number of reviews and ratings.  
-**Alternative Hypothesis**: There is a significant association between number of reviews and ratings. We expect the number of reviews to be positively associated with the ratings as more people may provide a review if it was a good recipe.
-**Test Statistic**: Correlation Coefficient.
+**Alternative Hypothesis**: There is a significant association between number of reviews and ratings. We expect the number of reviews to be positively associated with the ratings as more people may provide a review if it was a good recipe.  
+**Test Statistic**: Correlation Coefficient.  
 **Significance Level**: 0.05
  
 <iframe
@@ -269,7 +267,7 @@ p < 0.05. Thus, we **reject the null hypothesis** that number of steps is correl
 
 ### Framing a Prediction Problem
 
-We plan to create a **regression model** using features in the recipes dataset to predict the average rating of the recipe. The reason we chose average rating is because the ratings show people’s overall opinion on the recipe and we want to know which recipes are most liked. We chose **R<sup>2</sup>**, root mean squared error as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
+We plan to create a **regression model** using features in the recipes dataset to predict the average rating of the recipe. The reason we chose average rating is because the ratings show people’s overall opinion on the recipe and we want to know which recipes are most liked. We chose **R<sup>2</sup>** and **root mean squared error** (RMSE) as these metrics are appropriate for evaluating a regressor. Additionally, we will evaluate the magnitude and direction of the coefficients, to inform which factors play the largest role and in what direction.
 
 **R-squared** (R<sup>2</sup>): Represents the proportion of the variance in the dependent variable (the variable being predicted). A higher R<sup>2</sup> value indicates a better fit of the model to the data.  
 **Root Mean Squared Error** (RMSE): Represents the average absolute differences between the predicted and observed values. Lower RMSE values indicate better fit.  
@@ -314,7 +312,7 @@ Other hyperparameters we could have tried but didn't because it would affect abi
 
 Our final model improved it's performance, performing well on the training and test data.
 
-Lower *RMSE* of **0.6102** and higher R<sup>2</sup> of **0.1177**: Addition of useful features.
+Lower *RMSE* of **0.6102** and higher R<sup>2</sup> of **0.1177**: These trends are most likely due to the addition of useful features; namely the *Review Sentiment* feature.
 
 The coefficients are higher magnitude. Specifically, the Sentiment feature shows a strong positive correlation, which makes sense (more "positive" reviews should correspond to generally higher ratings).
 
