@@ -242,7 +242,7 @@ p-value for `protein`: 0.198, fail to reject
   frameborder="0"
 ></iframe>
 
-**Related columns**: *minutes*, *num_reviews*, *n_steps*, *n_ingredients*, *total fat*, *sugar*, *saturated fat*, *carbohydrates*.  
+**Related columns**: `minutes`, `num_reviews`, `n_steps`, `n_ingredients`, `total fat`, `sugar`, `saturated fat`, `carbohydrates`.  
 **Conclusion**: The above **related columns** are related to the missingness of `average_ratings`. In other words, the missingness of `average_ratings` is **Missing At Random** (MAR).   
 **Imputation**: After the analysis, we did probabilitic permutation based on `num_reviews`. That means the missing value of `average_ratings` will be filled with the value that has the similar `num_reviews`.  
 After the imputation, the *mean* of `average_ratings` changed from 4.625 to 4.624 and the *standard deviation* changed from 0.640 to 0.645.
